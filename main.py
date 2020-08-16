@@ -59,16 +59,16 @@ class main:
     def post(self):
 
         # Get the symbol to use
-        symbol = self.symbols[randint(0,len(self.symbols))]
+        symbol = self.symbols[randint(0,len(self.symbols)-1)]
 
         # Get the two words
-        num1 = randint(0, len(self.words))
+        num1 = randint(0, len(self.words)-1)
         word1 = self.words[num1]
 
         # Verify the same numbers were not chosen
-        num2 = randint(0, len(self.words))
+        num2 = randint(0, len(self.words)-1)
         while (num1 == num2):
-            num2 = randint(0, len(self.words))
+            num2 = randint(0, len(self.words)-1)
         word2 = self.words[num2]
 
         # Capitalise the beginning of both words and remove the line breaks
