@@ -10,8 +10,10 @@ class main:
     auth = None
     twitterAPI = None
     words = None
+    symbols = None
     scheduler = None
     delay = 1
+    hashtag = False
 
     def __init__(self):
 
@@ -23,6 +25,14 @@ class main:
         self.auth = tweepy.OAuthHandler(self.config["Auth"]["APIKey"],self.config["Auth"]["APISecret"])
         self.auth.set_access_token(self.config["Auth"]["AccessToken"],self.config["Auth"]["AccessTokenSecret"])
         self.twitterAPI = tweepy.API(self.auth)
+
+        # Check if we are hashtagging
+        if self.config["Configuration"]["hashtag"].upper() == "TRUE":
+            self.hashtag = True
+
+
+        # Turn symbols to a list
+        self.symbols = [char for char in self.config["Configuration"]["symbolsToUse"]]
 
         # Create the task scheduling
         self.scheduler = sched.scheduler(time.time, time.sleep)
@@ -48,6 +58,9 @@ class main:
 
     def post(self):
 
+        # Get the symbol to use
+        symbol = self.symbols[randint(0,len(self.symbols))]
+
         # Get the two words
         num1 = randint(0, len(self.words))
         word1 = self.words[num1]
@@ -62,7 +75,10 @@ class main:
         word1, word2 = word1.title().rstrip(), word2.title().rstrip()
 
         # Post the statement to twitter
-        self.twitterAPI.update_status("#"+word1 + " > " + "#"+word2)
+        if self.hashtag:
+            self.twitterAPI.update_status("#"+word1 + " " + symbol + " " + "#"+word2)
+        else:
+            self.twitterAPI.update_status(word1 + " " + symbol + " " + word2)
 
         # Re enter the scheduler
         self.scheduler.enter(self.delay,1,self.post)
