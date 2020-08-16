@@ -62,7 +62,7 @@ class main:
         word1, word2 = word1.title().rstrip(), word2.title().rstrip()
 
         # Post the statement to twitter
-        self.twitterAPI.update_status(word1 + " > " + word2)
+        self.twitterAPI.update_status("#"+word1 + " > " + "#"+word2)
 
         # Re enter the scheduler
         self.scheduler.enter(self.delay,1,self.post)
